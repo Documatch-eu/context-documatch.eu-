@@ -1,0 +1,6 @@
+{
+  "name": "Documatch Context",
+  "description": "Comparateur intelligent et personnalisé de logiciels GED en fonction de votre ERP, métier et contraintes.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}

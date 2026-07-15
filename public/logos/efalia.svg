@@ -1,0 +1,22 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="90" height="32" viewBox="0 0 90 32" fill="none">
+  <!-- Icon: Slanted blue-gradient grid of diamonds/squares representing the Efalia mark -->
+  <g transform="translate(4, 6.5) skewX(-13)">
+    <!-- Row 1 -->
+    <rect x="0" y="0" width="5.5" height="5.5" rx="1" fill="#1e3a8a" />
+    <rect x="7.2" y="0" width="5.5" height="5.5" rx="1" fill="#2563eb" />
+    <rect x="14.4" y="0" width="5.5" height="5.5" rx="1" fill="#3b82f6" />
+    
+    <!-- Row 2 -->
+    <rect x="0" y="7.2" width="5.5" height="5.5" rx="1" fill="#1d4ed8" />
+    <rect x="7.2" y="7.2" width="5.5" height="5.5" rx="1" fill="#3b82f6" />
+    <rect x="14.4" y="7.2" width="5.5" height="5.5" rx="1" fill="#60a5fa" />
+    
+    <!-- Row 3 -->
+    <rect x="0" y="14.4" width="5.5" height="5.5" rx="1" fill="#2563eb" />
+    <rect x="7.2" y="14.4" width="5.5" height="5.5" rx="1" fill="#60a5fa" />
+    <rect x="14.4" y="14.4" width="5.5" height="5.5" rx="1" fill="#93c5fd" />
+  </g>
+
+  <!-- Typography: Clean bold lowercase "efalia" text, perfectly scaled to fill the viewBox width with no trailing whitespace -->
+  <text x="29" y="23.5" font-family="system-ui, -apple-system, 'Inter', 'Segoe UI', sans-serif" font-weight="800" font-size="19" fill="#0f172a" letter-spacing="-0.04em">efalia</text>
+</svg>

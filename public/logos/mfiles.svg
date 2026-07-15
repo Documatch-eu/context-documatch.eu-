@@ -1,0 +1,22 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="110" height="32" viewBox="0 0 110 32" fill="none">
+  <!-- M-Files High-Fidelity Typographic Logo (as requested in the attached image) -->
+  
+  <!-- "M": Slanted vibrant blue bold italic letter -->
+  <text x="6" y="24.5" font-family="'Segoe UI', -apple-system, system-ui, sans-serif" font-weight="800" font-style="italic" font-size="24" fill="#0072c6" letter-spacing="-0.02em">M</text>
+  
+  <!-- Hyphen: Thick charcoal rect, perfectly positioned between M and Files -->
+  <rect x="31.5" y="14.5" width="8" height="3.2" fill="#444444" rx="0.5" />
+  
+  <!-- "F": Bold upright charcoal letter -->
+  <text x="44.5" y="24.5" font-family="'Segoe UI', -apple-system, system-ui, sans-serif" font-weight="700" font-size="22" fill="#444444" letter-spacing="-0.01em">F</text>
+  
+  <!-- "i": Custom split letter with charcoal stem and vibrant blue dot -->
+  <rect x="59.5" y="11.5" width="3.5" height="13" fill="#444444" rx="0.3" />
+  <circle cx="61.25" cy="6.2" r="2.4" fill="#0072c6" />
+  
+  <!-- "les": Bold upright charcoal letters following the custom "i" -->
+  <text x="66.5" y="24.5" font-family="'Segoe UI', -apple-system, system-ui, sans-serif" font-weight="700" font-size="22" fill="#444444" letter-spacing="-0.02em">les</text>
+  
+  <!-- Registered Trademark "®" superscript at the end -->
+  <text x="96" y="13.5" font-family="'Segoe UI', -apple-system, system-ui, sans-serif" font-weight="700" font-size="6.5" fill="#444444">®</text>
+</svg>

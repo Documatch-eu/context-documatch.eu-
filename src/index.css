@@ -1,0 +1,192 @@
+@import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600;700&display=swap');
+@import "tailwindcss";
+
+@theme {
+  --font-sans: "Plus Jakarta Sans", "Inter", ui-sans-serif, system-ui, sans-serif;
+  --font-mono: "JetBrains Mono", ui-monospace, SFMono-Regular, monospace;
+}
+
+/* Hide scrollbars globally across the entire landing page and its containers */
+html, body {
+  scroll-behavior: smooth;
+  overflow-x: hidden;
+  scrollbar-width: none; /* For Firefox */
+  -ms-overflow-style: none; /* For IE and Edge */
+}
+
+html::-webkit-scrollbar,
+body::-webkit-scrollbar,
+#root::-webkit-scrollbar {
+  display: none; /* For Chrome, Safari, and Opera */
+}
+
+/* Sleek custom scrollbars for specific internal small scrolls if needed */
+.custom-scrollbar::-webkit-scrollbar {
+  width: 4px;
+  height: 4px;
+}
+.custom-scrollbar::-webkit-scrollbar-track {
+  background: transparent;
+}
+.custom-scrollbar::-webkit-scrollbar-thumb {
+  background: rgba(148, 163, 184, 0.15);
+  border-radius: 9999px;
+}
+.custom-scrollbar::-webkit-scrollbar-thumb:hover {
+  background: rgba(148, 163, 184, 0.3);
+}
+.custom-scrollbar {
+  scrollbar-width: thin;
+  scrollbar-color: rgba(148, 163, 184, 0.15) transparent;
+}
+
+/* @media print for a highly polished, ink-saving printable PDF report */
+@media print {
+  /* Set global margins and background */
+  @page {
+    margin: 1.5cm;
+    size: portrait;
+  }
+
+  html, body {
+    background-color: #ffffff !important;
+    color: #0f172a !important;
+    height: auto !important;
+    overflow: visible !important;
+    font-size: 11pt !important;
+  }
+
+  /* Hide absolutely everything else */
+  body * {
+    visibility: hidden;
+  }
+
+  /* Force only the print-area (results summary) and its descendants to be visible */
+  #print-area,
+  #print-area * {
+    visibility: visible;
+  }
+
+  /* Position the print-area cleanly at the top left of the printable page */
+  #print-area {
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 100% !important;
+    max-width: 100% !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    display: block !important;
+    background: transparent !important;
+    box-shadow: none !important;
+    border: none !important;
+  }
+
+  /* Transform dark components into a beautiful, high-contrast, ink-saving light layout */
+  #print-area .bg-slate-900,
+  #print-area .bg-slate-950,
+  #print-area .bg-slate-950\/50,
+  #print-area .bg-slate-950\/60,
+  #print-area .bg-slate-900\/40 {
+    background-color: #f8fafc !important; /* light soft gray */
+    background-image: none !important;
+    border: 1px solid #e2e8f0 !important; /* light gray border */
+    color: #0f172a !important;
+    box-shadow: none !important;
+  }
+
+  /* Top match card (index === 0) styling for printing */
+  #print-area .border-blue-500,
+  #print-area .ring-2 {
+    border: 2px solid #2563eb !important;
+    box-shadow: none !important;
+    outline: none !important;
+  }
+
+  #print-area .border-indigo-500 {
+    border: 1px solid #4f46e5 !important;
+  }
+
+  #print-area .border-slate-800,
+  #print-area .border-slate-850 {
+    border-color: #cbd5e1 !important;
+  }
+
+  /* Convert all texts to high-contrast dark color */
+  #print-area text,
+  #print-area h4,
+  #print-area h5,
+  #print-area h6,
+  #print-area p,
+  #print-area span,
+  #print-area strong,
+  #print-area label {
+    color: #0f172a !important;
+  }
+
+  #print-area .text-white {
+    color: #000000 !important;
+  }
+
+  #print-area .text-slate-300,
+  #print-area .text-slate-400,
+  #print-area .text-slate-500 {
+    color: #334155 !important;
+  }
+
+  /* Accent colors */
+  #print-area .text-blue-400 {
+    color: #1d4ed8 !important; /* Rich print blue */
+  }
+
+  #print-area .text-indigo-400 {
+    color: #4338ca !important; /* Rich print indigo */
+  }
+
+  #print-area .text-emerald-400 {
+    color: #047857 !important; /* Rich print green */
+  }
+
+  #print-area .bg-blue-500\/20,
+  #print-area .bg-blue-950 {
+    background-color: #eff6ff !important;
+    border: 1px solid #bfdbfe !important;
+  }
+
+  /* Ensure page breaks are clean */
+  #print-area .grid {
+    display: flex !important;
+    flex-direction: column !important;
+    gap: 1.5rem !important;
+  }
+
+  /* Print utility to hide items */
+  .print\:hidden,
+  button,
+  svg.print\:hidden,
+  #cookie-banner-root,
+  #cta-popup-overlay,
+  #wizard-modal-overlay::before {
+    display: none !important;
+    opacity: 0 !important;
+    visibility: hidden !important;
+  }
+}
+
+@keyframes marquee {
+  0% { transform: translateX(0); }
+  100% { transform: translateX(-50%); }
+}
+
+.animate-marquee {
+  display: flex;
+  width: max-content;
+  animation: marquee 40s linear infinite;
+}
+
+.animate-marquee:hover {
+  animation-play-state: paused;
+}
+
+
+
