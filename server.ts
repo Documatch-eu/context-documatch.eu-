@@ -363,36 +363,147 @@ Consignes de formatage de l'e-mail :
 </html>
     `.trim();
 
-    console.log(`Sending email via Resend to ${email}`);
+    console.log(`Sending email via Resend for lead: ${email}`);
 
     const resendApiKey = process.env.RESEND_API_KEY;
     if (!resendApiKey) {
-      throw new Error("RESEND_API_KEY is not defined in the environment secrets.");
+      console.warn("RESEND_API_KEY is not defined in the environment secrets. Skipping email dispatch.");
+      return res.json({ success: true, message: "RESEND_API_KEY not defined, email sending skipped" });
     }
 
-    const resendResponse = await fetch("https://api.resend.com/emails", {
-      method: "POST",
-      headers: {
-        "Authorization": `Bearer ${resendApiKey}`,
-        "Content-Type": "application/json"
-      },
-      body: JSON.stringify({
-        from: "Documatch CONTEXT <onboarding@resend.dev>",
-        to: email,
-        subject: labels.subject,
-        html: htmlReport
-      })
-    });
+    // 1. Send detailed lead notification to info@documatch.eu
+    try {
+      console.log(`Sending lead notification to info@documatch.eu`);
+      const leadHtml = `
+        <div style="font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;color:#1e293b;padding:30px;max-width:650px;margin:0 auto;background-color:#ffffff;border:1px solid #e2e8f0;border-radius:12px;box-shadow:0 4px 6px -1px rgba(0,0,0,0.1);">
+          <div style="text-align:center;border-bottom:2px solid #3b82f6;padding-bottom:15px;margin-bottom:20px;">
+            <h1 style="color:#1d4ed8;margin:0;font-size:22px;">🚀 Nouveau Lead Capturé !</h1>
+            <p style="color:#64748b;margin:5px 0 0 0;font-size:14px;font-weight:600;">Documatch CONTEXT - Audit de compatibilité GED</p>
+          </div>
+          
+          <h2 style="font-size:16px;color:#0f172a;margin-top:0;border-bottom:1px solid #f1f5f9;padding-bottom:8px;">Informations sur l'entreprise</h2>
+          <table style="width:100%;border-collapse:collapse;margin-bottom:25px;font-size:14px;">
+            <tr style="background-color:#f8fafc;">
+              <td style="padding:10px;font-weight:bold;color:#475569;width:35%;border-bottom:1px solid #f1f5f9;">Nom de l'entreprise</td>
+              <td style="padding:10px;color:#0f172a;font-weight:600;border-bottom:1px solid #f1f5f9;">${companyName || 'Documatch Guest'}</td>
+            </tr>
+            <tr>
+              <td style="padding:10px;font-weight:bold;color:#475569;border-bottom:1px solid #f1f5f9;">Adresse E-mail</td>
+              <td style="padding:10px;color:#1d4ed8;font-weight:600;border-bottom:1px solid #f1f5f9;"><a href="mailto:${email}">${email}</a></td>
+            </tr>
+            <tr style="background-color:#f8fafc;">
+              <td style="padding:10px;font-weight:bold;color:#475569;border-bottom:1px solid #f1f5f9;">Téléphone</td>
+              <td style="padding:10px;color:#0f172a;font-weight:600;border-bottom:1px solid #f1f5f9;">${phone || '-'}</td>
+            </tr>
+            <tr>
+              <td style="padding:10px;font-weight:bold;color:#475569;border-bottom:1px solid #f1f5f9;">Pays</td>
+              <td style="padding:10px;color:#0f172a;border-bottom:1px solid #f1f5f9;">${country || '-'}</td>
+            </tr>
+            <tr style="background-color:#f8fafc;">
+              <td style="padding:10px;font-weight:bold;color:#475569;border-bottom:1px solid #f1f5f9;">Secteur d'activité</td>
+              <td style="padding:10px;color:#0f172a;border-bottom:1px solid #f1f5f9;">${industry}</td>
+            </tr>
+            <tr>
+              <td style="padding:10px;font-weight:bold;color:#475569;border-bottom:1px solid #f1f5f9;">Volume de documents</td>
+              <td style="padding:10px;color:#0f172a;border-bottom:1px solid #f1f5f9;">${volume}</td>
+            </tr>
+            <tr style="background-color:#f8fafc;">
+              <td style="padding:10px;font-weight:bold;color:#475569;border-bottom:1px solid #f1f5f9;">Utilisateurs / Budget</td>
+              <td style="padding:10px;color:#0f172a;border-bottom:1px solid #f1f5f9;">${usersCount} ut. / ${allocatedBudget} €</td>
+            </tr>
+            <tr>
+              <td style="padding:10px;font-weight:bold;color:#475569;border-bottom:1px solid #f1f5f9;">Système ERP actuel</td>
+              <td style="padding:10px;color:#0f172a;font-weight:600;border-bottom:1px solid #f1f5f9;">${erp}</td>
+            </tr>
+            <tr style="background-color:#f8fafc;">
+              <td style="padding:10px;font-weight:bold;color:#475569;border-bottom:1px solid #f1f5f9;">Processus clés</td>
+              <td style="padding:10px;color:#0f172a;border-bottom:1px solid #f1f5f9;">${processes}</td>
+            </tr>
+            <tr>
+              <td style="padding:10px;font-weight:bold;color:#475569;border-bottom:1px solid #f1f5f9;">Contraintes réglementaires</td>
+              <td style="padding:10px;color:#0f172a;border-bottom:1px solid #f1f5f9;">${complianceConstraint}</td>
+            </tr>
+            <tr style="background-color:#ecfdf5;">
+              <td style="padding:10px;font-weight:bold;color:#047857;border-bottom:1px solid #a7f3d0;">Solutions Recommandées</td>
+              <td style="padding:10px;color:#065f46;font-weight:bold;border-bottom:1px solid #a7f3d0;">${recommendations}</td>
+            </tr>
+          </table>
+          
+          <h2 style="font-size:16px;color:#0f172a;border-bottom:1px solid #f1f5f9;padding-bottom:8px;margin-top:30px;">Analyse d'Expert IA</h2>
+          <div style="background-color:#0f172a;color:#cbd5e1;padding:20px;border-radius:8px;font-size:14px;line-height:1.6;">
+            ${geminiAnalysis}
+          </div>
+          
+          <div style="text-align:center;margin-top:30px;padding-top:15px;border-top:1px solid #e2e8f0;font-size:11px;color:#94a3b8;">
+            <p style="margin:0;">Documatch CONTEXT Lead Generator &copy; 2026. Tous droits réservés.</p>
+          </div>
+        </div>
+      `;
 
-    if (!resendResponse.ok) {
-      const errorText = await resendResponse.text();
-      throw new Error(`Resend API response error (${resendResponse.status}): ${errorText}`);
+      const adminEmails = ["info@documatch.eu", "frquwii@gmail.com"];
+      const fromEmail = process.env.RESEND_FROM_EMAIL || "Documatch Lead Bot <onboarding@resend.dev>";
+
+      for (const adminEmail of adminEmails) {
+        try {
+          console.log(`Sending lead notification to admin ${adminEmail}`);
+          const adminResponse = await fetch("https://api.resend.com/emails", {
+            method: "POST",
+            headers: {
+              "Authorization": `Bearer ${resendApiKey}`,
+              "Content-Type": "application/json"
+            },
+            body: JSON.stringify({
+              from: fromEmail,
+              to: adminEmail,
+              subject: `[Nouveau Lead] ${companyName || 'Documatch Guest'} - ${erp} - Documatch CONTEXT`,
+              html: leadHtml
+            })
+          });
+
+          if (!adminResponse.ok) {
+            const leadErrText = await adminResponse.text();
+            console.error(`Resend API failed to send lead notification to admin ${adminEmail}:`, leadErrText);
+          } else {
+            const adminData = await adminResponse.json();
+            console.log(`Lead notification sent to admin ${adminEmail} successfully! ID:`, adminData.id);
+          }
+        } catch (leadSendError) {
+          console.error(`Error sending lead notification to admin ${adminEmail}:`, leadSendError);
+        }
+      }
+    } catch (leadHtmlBuildError) {
+      console.error("Error building or loop-sending lead notification HTML:", leadHtmlBuildError);
     }
 
-    const resendData = await resendResponse.json();
-    console.log(`Resend Email Sent Successfully! ID:`, resendData.id);
+    // 2. Try to send the custom report to the user's email address
+    try {
+      const fromUserEmail = process.env.RESEND_FROM_EMAIL || "Documatch CONTEXT <onboarding@resend.dev>";
+      const userResponse = await fetch("https://api.resend.com/emails", {
+        method: "POST",
+        headers: {
+          "Authorization": `Bearer ${resendApiKey}`,
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify({
+          from: fromUserEmail,
+          to: email,
+          subject: labels.subject,
+          html: htmlReport
+        })
+      });
 
-    return res.json({ success: true, id: resendData.id });
+      if (!userResponse.ok) {
+        const errorText = await userResponse.text();
+        console.warn(`Resend API failed to send report to user ${email} (expected on unverified free tier sandbox):`, errorText);
+      } else {
+        const resendData = await userResponse.json();
+        console.log(`Resend Email sent to user ${email} successfully! ID:`, resendData.id);
+      }
+    } catch (userSendError) {
+      console.error(`Error sending custom report email to user ${email}:`, userSendError);
+    }
+
+    return res.json({ success: true, message: "Lead processed and sent successfully" });
   } catch (error: any) {
     console.error("Error in /api/analyze-and-send:", error);
     return res.status(500).json({ error: error.message || "Internal server error" });

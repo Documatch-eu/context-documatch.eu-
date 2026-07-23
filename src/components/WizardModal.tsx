@@ -255,10 +255,10 @@ export default function WizardModal({ isOpen, onClose, currentLang, t }: WizardM
   };
 
   // Send HTML report with Gemini analysis via Resend API on the server
-  const sendResendReport = async (calculatedResults: GedResult[]) => {
+  const sendResendReport = async (calculatedResults: GedResult[], recipientEmail?: string) => {
     try {
       const payload = {
-        email: companyEmail,
+        email: recipientEmail || companyEmail,
         companyName: companyName || 'Documatch Guest',
         phone: companyPhone,
         country: COUNTRY_OPTIONS[currentLang].find(c => c.value === companyCountry)?.label || companyCountry,
@@ -343,6 +343,7 @@ export default function WizardModal({ isOpen, onClose, currentLang, t }: WizardM
         recommendations: recommendedGeds.map(g => `${g.name} (${g.score}%)`).join(', ')
       };
 
+      // 1. Submit to Formspree
       await fetch('https://formspree.io/f/mzdlqkll', {
         method: 'POST',
         headers: {
@@ -351,6 +352,9 @@ export default function WizardModal({ isOpen, onClose, currentLang, t }: WizardM
         },
         body: JSON.stringify(payload)
       });
+
+      // 2. Dispatch custom HTML report with Gemini analysis via Resend
+      await sendResendReport(recommendedGeds, leadEmail);
     } catch (error) {
       console.error('Error submitting lead to Formspree:', error);
     }
